@@ -3,6 +3,8 @@ package corridor;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Vector;
@@ -10,20 +12,24 @@ import java.util.Vector;
 enum LayoutType {
     Flow, Box_X_AXIS, Box_Y_AXIS
 }
-public class CorridorPanel extends JPanel {
+class CorridorPanel extends JPanel {
     private final static int ROWS = 10;
     private final static int COLUMNS = 20;
     private JTextArea inputHeader;
     private JTextArea outputHeader;
     private JScrollPane inputTableScrollPane;
     private JScrollPane outputTableScrollPane;
-    private JTable inputJTable;
-    private JTable outputJTable;
+    private JTable inputTable;
+    private JTable outputTable;
+    private JTextField inputFile;
+    private JButton browseButton;
 
-    public CorridorPanel() {
+    CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JPanel fileNamePanel =  createPanel(LayoutType.Flow,
-                new Component[] {new JTextField(COLUMNS), new JButton("...")});
+        inputFile = new JTextField(COLUMNS);
+        browseButton = new JButton("...");
+        browseButton.addActionListener(new BrowseButtonListener());
+        JPanel fileNamePanel =  createPanel(LayoutType.Flow, new Component[] {inputFile, browseButton});
 
         inputHeader = createTextArea();
         outputHeader = createTextArea();
@@ -31,28 +37,26 @@ public class CorridorPanel extends JPanel {
         JPanel headersPanel = createPanel(LayoutType.Box_X_AXIS,
                 new Component[] {new JScrollPane(inputHeader), new JScrollPane(outputHeader)});
 
-
-        inputJTable = new JTable();
-        inputTableScrollPane = new JScrollPane(inputJTable);
-
-        outputJTable = new JTable();
-        outputTableScrollPane = new JScrollPane(outputJTable);
-
         JSplitPane headerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fileNamePanel, headersPanel);
+
+
+        inputTable = new JTable();
+        inputTableScrollPane = new JScrollPane(inputTable);
+        outputTable = new JTable();
+        outputTableScrollPane = new JScrollPane(outputTable);
+
         JPanel tablePanel = createPanel(LayoutType.Box_X_AXIS,
                 new Component[] {inputTableScrollPane, outputTableScrollPane});
         add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, headerSplitPane, tablePanel));
 
-        new Reader().read(10);
-
         synchronizeTableScrollBars();
     }
-    public JTextArea createTextArea() {
+    private JTextArea createTextArea() {
         JTextArea textArea = new JTextArea(ROWS, COLUMNS);
         textArea.setBorder(BorderFactory.createLineBorder(Color.black));
         return textArea;
     }
-    public JPanel createPanel(LayoutType layoutType, Component[] components) {
+    private JPanel createPanel(LayoutType layoutType, Component[] components) {
         JPanel panel = new JPanel();
         LayoutManager layoutManager = null;
         switch (layoutType) {
@@ -73,17 +77,19 @@ public class CorridorPanel extends JPanel {
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
         return panel;
     }
-    public void synchronizeTableScrollBars() {
+    private void synchronizeTableScrollBars() {
         JScrollBar sBar1 = inputTableScrollPane.getVerticalScrollBar();
         JScrollBar sBar2 = outputTableScrollPane.getVerticalScrollBar();
         sBar2.setModel(sBar1.getModel()); //<--------------synchronize
     }
     class Reader {
-        public void read(int headerSize) {
+        void read(String filename, int headerSize) {
             try (BufferedReader reader = new BufferedReader(
-                    new FileReader(new File("001_MZ16_cmp_stack_vel001.corr")))){
-                String line = null;
+                    new FileReader(new File(filename)))){
+                String line;
                 long lineNumber = 0;
+                inputHeader.setText("");
+                outputHeader.setText("");
                 Vector<String> inputColumnNames = null;
                 Vector<Vector<String>> inputData = new Vector<>();
                 Vector<String> outputColumnNames = null;
@@ -106,8 +112,8 @@ public class CorridorPanel extends JPanel {
                         outputData.add(lineToVector(convertTable(line)));
                     }
                 }
-                inputJTable.setModel(new DefaultTableModel(inputData, inputColumnNames));
-                outputJTable.setModel(new DefaultTableModel(outputData, outputColumnNames));
+                inputTable.setModel(new DefaultTableModel(inputData, inputColumnNames));
+                outputTable.setModel(new DefaultTableModel(outputData, outputColumnNames));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -115,13 +121,13 @@ public class CorridorPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        public Vector<String> lineToVector(String line) {
+        Vector<String> lineToVector(String line) {
             return new Vector<>(Arrays.asList(split(line)));
         }
-        public String[] split(String line) {
+        String[] split(String line) {
             return line.split("\\s+");
         }
-        public String convertHeader(String line) {
+        String convertHeader(String line) {
             String[] values = split(line);
             return new StringBuilder()
                     .append(values[0]).append('\t')
@@ -133,7 +139,7 @@ public class CorridorPanel extends JPanel {
                     .append("DeltaA")
                     .toString();
         }
-        public String convertTable(String line) {
+        String convertTable(String line) {
             String[] values = split(line);
             return new StringBuilder()
                     .append(values[0]).append('\t')
@@ -144,6 +150,19 @@ public class CorridorPanel extends JPanel {
                     .append(1000).append('\t')
                     .append(1.5)
                     .toString();
+        }
+    }
+
+    class BrowseButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+            int returnValue = chooser.showOpenDialog(CorridorPanel.this);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                inputFile.setText(file.getName());
+                new Reader().read(file.getName(), 10);
+            }
         }
     }
 }
