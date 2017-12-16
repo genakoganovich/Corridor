@@ -12,7 +12,7 @@ import java.util.Vector;
 enum LayoutType {
     Flow, Box_X_AXIS, Box_Y_AXIS
 }
-class CorridorPanel extends JPanel {
+class CorridorPanel extends JPanel                                {
     private final static int ROWS = 10;
     private final static int COLUMNS = 20;
     private JTextArea inputHeader;
@@ -23,13 +23,23 @@ class CorridorPanel extends JPanel {
     private JTable outputTable;
     private JTextField inputFile;
     private JButton browseButton;
+    private JButton testButton;
+    private JComboBox<String> inputFormatComboBox;
+    private JComboBox<String> outputFormatComboBox;
+    private XMLParser xmlParser;
 
     CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
+        xmlParser = new XMLParser();
+        inputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
+        outputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
+        testButton = new JButton("test");
         browseButton.addActionListener(new BrowseButtonListener());
-        JPanel fileNamePanel =  createPanel(LayoutType.Flow, new Component[] {inputFile, browseButton});
+        testButton.addActionListener(new TestListener());
+        JPanel fileNamePanel =  createPanel(LayoutType.Flow, new Component[] {inputFile, browseButton,
+                inputFormatComboBox, outputFormatComboBox, testButton});
 
         inputHeader = createTextArea();
         outputHeader = createTextArea();
@@ -83,76 +93,37 @@ class CorridorPanel extends JPanel {
         sBar2.setModel(sBar1.getModel()); //<--------------synchronize
     }
     class Reader {
-        void read(String filename, int headerSize) {
-            try (BufferedReader reader = new BufferedReader(
-                    new FileReader(new File(filename)))){
+        void read(String filename) {
+            Format inputFormat = xmlParser.parse((String) inputFormatComboBox.getSelectedItem());
+            Format outputFormat = xmlParser.parse((String) outputFormatComboBox.getSelectedItem());
+            try (BufferedReader reader = new BufferedReader(new FileReader(new File(filename)))){
                 String line;
                 long lineNumber = 0;
                 inputHeader.setText("");
                 outputHeader.setText("");
-                Vector<String> inputColumnNames = null;
+                Vector<String> inputColumnNames = inputFormat.hasData ? new Vector<>(Arrays.asList(inputFormat.tableHeaders)) : null;
+                Vector<String> outputColumnNames = outputFormat.hasData ? new Vector<>(Arrays.asList(outputFormat.tableHeaders)) : null;
                 Vector<Vector<String>> inputData = new Vector<>();
-                Vector<String> outputColumnNames = null;
                 Vector<Vector<String>> outputData = new Vector<>();
 
                 while ((line = reader.readLine()) != null) {
                     lineNumber++;
-                    if (lineNumber < headerSize) {
+                    if (lineNumber <= inputFormat.headerSize) {
                         inputHeader.append(line);
                         inputHeader.append(System.lineSeparator());
-                        outputHeader.append(System.lineSeparator());
-                    } else if(lineNumber == headerSize) {
-                        inputHeader.append(line);
-                        outputHeader.append(convertHeader(line));
-                        inputColumnNames = lineToVector(line);
-                        inputColumnNames.add(" ");
-                        outputColumnNames = lineToVector(convertHeader(line));
-                    } else {
-                        inputData.add(lineToVector(line));
-                        outputData.add(lineToVector(convertTable(line)));
+                    }  else {
+                        inputData.add(Util.lineToVector(line));
                     }
                 }
                 inputTable.setModel(new DefaultTableModel(inputData, inputColumnNames));
                 outputTable.setModel(new DefaultTableModel(outputData, outputColumnNames));
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        Vector<String> lineToVector(String line) {
-            return new Vector<>(Arrays.asList(split(line)));
-        }
-        String[] split(String line) {
-            return line.split("\\s+");
-        }
-        String convertHeader(String line) {
-            String[] values = split(line);
-            return new StringBuilder()
-                    .append(values[0]).append('\t')
-                    .append(values[1]).append('\t')
-                    .append('V').append('\t')
-                    .append('A').append('\t')
-                    .append('T').append('\t')
-                    .append("DeltaV").append('\t')
-                    .append("DeltaA")
-                    .toString();
-        }
-        String convertTable(String line) {
-            String[] values = split(line);
-            return new StringBuilder()
-                    .append(values[0]).append('\t')
-                    .append(values[1]).append('\t')
-                    .append(values[2]).append('\t')
-                    .append(0.0).append('\t')
-                    .append(values[3]).append('\t')
-                    .append(1000).append('\t')
-                    .append(1.5)
-                    .toString();
-        }
     }
-
     class BrowseButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -161,8 +132,14 @@ class CorridorPanel extends JPanel {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 inputFile.setText(file.getName());
-                new Reader().read(file.getName(), 10);
+                new Reader().read(file.getName());
             }
+        }
+    }
+    private class TestListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(new XMLParser().parse("cmp_stack"));
         }
     }
 }
