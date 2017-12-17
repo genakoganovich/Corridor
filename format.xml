@@ -2,7 +2,6 @@
 <format>
     <corridor id = "CMPStack">
         <header_size>10</header_size>
-        <has_data>true</has_data>
         <table_header>XCoord</table_header>
         <table_header>YCoord</table_header>
         <table_header>Horiz</table_header>
@@ -11,7 +10,6 @@
     </corridor>
     <corridor id = "Zomf">
         <header_size>1</header_size>
-        <has_data>true</has_data>
         <table_header>XCoord</table_header>
         <table_header>YCoord</table_header>
         <table_header>V</table_header>

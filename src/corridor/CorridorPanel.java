@@ -1,6 +1,7 @@
 package corridor;
 
 import javafx.util.Pair;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -14,7 +15,8 @@ import java.util.Vector;
 enum LayoutType {
     Flow, Box_X_AXIS, Box_Y_AXIS
 }
-class CorridorPanel extends JPanel                                {
+
+class CorridorPanel extends JPanel {
     private final static int ROWS = 10;
     private final static int COLUMNS = 20;
     private JTextArea inputHeader;
@@ -42,14 +44,14 @@ class CorridorPanel extends JPanel                                {
         testButton = new JButton("test");
         browseButton.addActionListener(new BrowseButtonListener());
         testButton.addActionListener(new TestListener());
-        JPanel fileNamePanel =  createPanel(LayoutType.Flow, new Component[] {inputFile, browseButton,
+        JPanel fileNamePanel = createPanel(LayoutType.Flow, new Component[]{inputFile, browseButton,
                 inputFormatComboBox, outputFormatComboBox, testButton});
 
         inputHeader = createTextArea();
         outputHeader = createTextArea();
 
         JPanel headersPanel = createPanel(LayoutType.Box_X_AXIS,
-                new Component[] {new JScrollPane(inputHeader), new JScrollPane(outputHeader)});
+                new Component[]{new JScrollPane(inputHeader), new JScrollPane(outputHeader)});
 
         JSplitPane headerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fileNamePanel, headersPanel);
 
@@ -60,16 +62,18 @@ class CorridorPanel extends JPanel                                {
         outputTableScrollPane = new JScrollPane(outputTable);
 
         JPanel tablePanel = createPanel(LayoutType.Box_X_AXIS,
-                new Component[] {inputTableScrollPane, outputTableScrollPane});
+                new Component[]{inputTableScrollPane, outputTableScrollPane});
         add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, headerSplitPane, tablePanel));
 
         synchronizeTableScrollBars();
     }
+
     private JTextArea createTextArea() {
         JTextArea textArea = new JTextArea(ROWS, COLUMNS);
         textArea.setBorder(BorderFactory.createLineBorder(Color.black));
         return textArea;
     }
+
     private JPanel createPanel(LayoutType layoutType, Component[] components) {
         JPanel panel = new JPanel();
         LayoutManager layoutManager = null;
@@ -85,28 +89,30 @@ class CorridorPanel extends JPanel                                {
                 break;
         }
         panel.setLayout(layoutManager);
-        for (Component c: components) {
+        for (Component c : components) {
             panel.add(c);
         }
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
         return panel;
     }
+
     private void synchronizeTableScrollBars() {
         JScrollBar sBar1 = inputTableScrollPane.getVerticalScrollBar();
         JScrollBar sBar2 = outputTableScrollPane.getVerticalScrollBar();
         sBar2.setModel(sBar1.getModel()); //<--------------synchronize
     }
+
     class Reader {
         void read(String filename) {
             Format inputFormat = xmlParser.parse((String) inputFormatComboBox.getSelectedItem());
             Format outputFormat = xmlParser.parse((String) outputFormatComboBox.getSelectedItem());
-            try (BufferedReader reader = new BufferedReader(new FileReader(new File(filename)))){
+            try (BufferedReader reader = new BufferedReader(new FileReader(new File(filename)))) {
                 String line;
                 long lineNumber = 0;
                 inputHeader.setText("");
                 outputHeader.setText("");
-                Vector<String> inputColumnNames = inputFormat.hasData ? new Vector<>(Arrays.asList(inputFormat.tableHeaders)) : null;
-                Vector<String> outputColumnNames = outputFormat.hasData ? new Vector<>(Arrays.asList(outputFormat.tableHeaders)) : null;
+                Vector<String> inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
+                Vector<String> outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
                 Vector<Vector<String>> inputData = new Vector<>();
                 Vector<Vector<String>> outputData = new Vector<>();
                 String from = (String) inputFormatComboBox.getSelectedItem();
@@ -117,7 +123,7 @@ class CorridorPanel extends JPanel                                {
                     if (lineNumber <= inputFormat.headerSize) {
                         inputHeader.append(line);
                         inputHeader.append(System.lineSeparator());
-                    }  else {
+                    } else {
                         inputData.add(Util.lineToVector(line));
                         outputData.add(Util.lineToVector(converter.convert(line)));
                     }
@@ -144,6 +150,7 @@ class CorridorPanel extends JPanel                                {
             }
         }
     }
+
     private class TestListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

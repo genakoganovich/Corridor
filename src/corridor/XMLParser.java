@@ -26,22 +26,20 @@ class XMLParser {
     }
     Format parse(String corridorID) {
         int headerSize = 0;
-        boolean hasData = false;
         String[] tableHeaders = null;
         Node nNode = findNodeByID(corridorID);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
             headerSize = Integer.parseInt(
                     eElement.getElementsByTagName("header_size").item(0).getTextContent());
-            hasData = Boolean.parseBoolean(
-                    eElement.getElementsByTagName("has_data").item(0).getTextContent());
+
             NodeList childrenList = eElement.getElementsByTagName("table_header");
             tableHeaders = new String[childrenList.getLength()];
             for (int i = 0; i < childrenList.getLength(); i++) {
                 tableHeaders[i] = childrenList.item(i).getTextContent();
             }
         }
-        return new Format(headerSize, hasData, tableHeaders);
+        return new Format(headerSize, tableHeaders);
     }
     private Node findNodeByID(String corridorID) {
         NodeList nList = doc.getElementsByTagName("corridor");
