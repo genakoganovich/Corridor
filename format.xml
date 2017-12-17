@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <format>
-    <corridor id = "None">
-        <header_size>10</header_size>
-        <has_data>false</has_data>
-    </corridor>
     <corridor id = "CMPStack">
         <header_size>10</header_size>
         <has_data>true</has_data>

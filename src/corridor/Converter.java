@@ -1,10 +1,8 @@
 package corridor;
 
 
-class Converter {
-    String convert(String line) {
-        return "under construction";
-    }
+abstract class Converter {
+    abstract String convert(String line);
 }
 class CMPStackToZomfConverter extends Converter {
     @Override
@@ -34,22 +32,12 @@ class ZomfToCMPStackConverter extends Converter {
                 .toString();
     }
 }
-class NoneToNoneConverter extends Converter{
-    @Override
-    String convert(String line) {
-        return line;
-    }
-}
-class NoneToCMPStackConverter extends Converter {}
-class NoneToZomfConverter extends Converter {}
-class CMPStackToNoneConverter extends Converter {}
 class CMPStackToCMPStackConverter extends Converter {
     @Override
     String convert(String line) {
         return line;
     }
 }
-class ZomfToNoneConverter extends Converter {}
 class ZomfToZomfConverter extends Converter {
     @Override
     String convert(String line) {
