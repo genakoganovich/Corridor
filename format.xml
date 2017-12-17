@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <format>
-    <corridor id = "none">
+    <corridor id = "None">
         <header_size>10</header_size>
         <has_data>false</has_data>
     </corridor>
-    <corridor id = "cmp_stack">
+    <corridor id = "CMPStack">
         <header_size>10</header_size>
         <has_data>true</has_data>
         <table_header>XCoord</table_header>
@@ -13,7 +13,7 @@
         <table_header>Vert</table_header>
         <table_header>none</table_header>
     </corridor>
-    <corridor id = "zomf_stack">
+    <corridor id = "Zomf">
         <header_size>1</header_size>
         <has_data>true</has_data>
         <table_header>XCoord</table_header>

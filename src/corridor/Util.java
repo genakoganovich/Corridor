@@ -17,7 +17,16 @@ class Util {
         HashMap<Pair<String, String>, Converter> converterMap = new HashMap<>();
         for (String from: xmlParser.getCorridors()) {
             for (String to: xmlParser.getCorridors()) {
-                converterMap.put(new Pair<>(from, to), new CMPStackToZomfConverter());
+                try {
+                    Class<? extends Converter> aClass = (Class<? extends Converter>) Class.forName("corridor." + from + "To" + to + "Converter");
+                    converterMap.put(new Pair<>(from, to), aClass.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return converterMap;

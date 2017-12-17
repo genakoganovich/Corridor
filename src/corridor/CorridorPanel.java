@@ -147,7 +147,7 @@ class CorridorPanel extends JPanel                                {
     private class TestListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println(new XMLParser().parse("cmp_stack"));
+            System.out.println(new XMLParser().parse("CMPStack"));
         }
     }
 }
