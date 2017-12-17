@@ -1,5 +1,6 @@
 package corridor;
 
+import javafx.util.Pair;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -7,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Vector;
 
 enum LayoutType {
@@ -27,12 +29,14 @@ class CorridorPanel extends JPanel                                {
     private JComboBox<String> inputFormatComboBox;
     private JComboBox<String> outputFormatComboBox;
     private XMLParser xmlParser;
+    private HashMap<Pair<String, String>, Converter> converterMap;
 
     CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
         xmlParser = new XMLParser();
+        converterMap = Util.createConverterMap(xmlParser);
         inputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
         outputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
         testButton = new JButton("test");
@@ -105,7 +109,9 @@ class CorridorPanel extends JPanel                                {
                 Vector<String> outputColumnNames = outputFormat.hasData ? new Vector<>(Arrays.asList(outputFormat.tableHeaders)) : null;
                 Vector<Vector<String>> inputData = new Vector<>();
                 Vector<Vector<String>> outputData = new Vector<>();
-
+                String from = (String) inputFormatComboBox.getSelectedItem();
+                String to = (String) outputFormatComboBox.getSelectedItem();
+                Converter converter = converterMap.get(new Pair<>(from, to));
                 while ((line = reader.readLine()) != null) {
                     lineNumber++;
                     if (lineNumber <= inputFormat.headerSize) {
@@ -113,6 +119,7 @@ class CorridorPanel extends JPanel                                {
                         inputHeader.append(System.lineSeparator());
                     }  else {
                         inputData.add(Util.lineToVector(line));
+                        outputData.add(Util.lineToVector(converter.convert(line)));
                     }
                 }
                 inputTable.setModel(new DefaultTableModel(inputData, inputColumnNames));
@@ -124,6 +131,7 @@ class CorridorPanel extends JPanel                                {
             }
         }
     }
+
     class BrowseButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
