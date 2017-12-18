@@ -1,16 +1,11 @@
 package corridor;
 
-import javafx.util.Pair;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Vector;
 
 enum LayoutType {
     Flow, Box_X_AXIS, Box_Y_AXIS
@@ -19,8 +14,8 @@ enum LayoutType {
 class CorridorPanel extends JPanel {
     private final static int ROWS = 10;
     private final static int COLUMNS = 20;
-    private JTextArea inputHeader;
-    private JTextArea outputHeader;
+    private JTextArea inputHeaderTextArea;
+    private JTextArea outputHeaderTextArea;
     private JScrollPane inputTableScrollPane;
     private JScrollPane outputTableScrollPane;
     private JTable inputTable;
@@ -30,31 +25,28 @@ class CorridorPanel extends JPanel {
     private JButton testButton;
     private JComboBox<String> inputFormatComboBox;
     private JComboBox<String> outputFormatComboBox;
-    private XMLParser xmlParser;
-    private HashMap<Pair<String, String>, Converter> converterMap;
+    private Model model;
 
     CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
-        xmlParser = new XMLParser();
-        converterMap = Util.createConverterMap(xmlParser);
-        inputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
-        outputFormatComboBox = new JComboBox<>(xmlParser.getCorridors());
+        model = new Model();
+        inputFormatComboBox = new JComboBox<>(model.xmlParser.getCorridors());
+        outputFormatComboBox = new JComboBox<>(model.xmlParser.getCorridors());
         testButton = new JButton("test");
         browseButton.addActionListener(new BrowseButtonListener());
         testButton.addActionListener(new TestListener());
         JPanel fileNamePanel = createPanel(LayoutType.Flow, new Component[]{inputFile, browseButton,
                 inputFormatComboBox, outputFormatComboBox, testButton});
 
-        inputHeader = createTextArea();
-        outputHeader = createTextArea();
+        inputHeaderTextArea = createTextArea();
+        outputHeaderTextArea = createTextArea();
 
         JPanel headersPanel = createPanel(LayoutType.Box_X_AXIS,
-                new Component[]{new JScrollPane(inputHeader), new JScrollPane(outputHeader)});
+                new Component[]{new JScrollPane(inputHeaderTextArea), new JScrollPane(outputHeaderTextArea)});
 
         JSplitPane headerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fileNamePanel, headersPanel);
-
 
         inputTable = new JTable();
         inputTableScrollPane = new JScrollPane(inputTable);
@@ -102,42 +94,6 @@ class CorridorPanel extends JPanel {
         sBar2.setModel(sBar1.getModel()); //<--------------synchronize
     }
 
-    class Reader {
-        void read(String filename) {
-            Format inputFormat = xmlParser.parse((String) inputFormatComboBox.getSelectedItem());
-            Format outputFormat = xmlParser.parse((String) outputFormatComboBox.getSelectedItem());
-            try (BufferedReader reader = new BufferedReader(new FileReader(new File(filename)))) {
-                String line;
-                long lineNumber = 0;
-                inputHeader.setText("");
-                outputHeader.setText("");
-                Vector<String> inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
-                Vector<String> outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
-                Vector<Vector<String>> inputData = new Vector<>();
-                Vector<Vector<String>> outputData = new Vector<>();
-                String from = (String) inputFormatComboBox.getSelectedItem();
-                String to = (String) outputFormatComboBox.getSelectedItem();
-                Converter converter = converterMap.get(new Pair<>(from, to));
-                while ((line = reader.readLine()) != null) {
-                    lineNumber++;
-                    if (lineNumber <= inputFormat.headerSize) {
-                        inputHeader.append(line);
-                        inputHeader.append(System.lineSeparator());
-                    } else {
-                        inputData.add(Util.lineToVector(line));
-                        outputData.add(Util.lineToVector(converter.convertData(line)));
-                    }
-                }
-                inputTable.setModel(new DefaultTableModel(inputData, inputColumnNames));
-                outputTable.setModel(new DefaultTableModel(outputData, outputColumnNames));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     class BrowseButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -146,7 +102,13 @@ class CorridorPanel extends JPanel {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 inputFile.setText(file.getName());
-                new Reader().read(file.getName());
+                String from = (String) inputFormatComboBox.getSelectedItem();
+                String to = (String) outputFormatComboBox.getSelectedItem();
+                model.read(file.getName(), from, to);
+                inputHeaderTextArea.setText(model.sb.toString());
+                outputHeaderTextArea.setText("");
+                inputTable.setModel(new DefaultTableModel(model.inputData, model.inputColumnNames));
+                outputTable.setModel(new DefaultTableModel(model.outputData, model.outputColumnNames));
             }
         }
     }
