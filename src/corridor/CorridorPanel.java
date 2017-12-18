@@ -125,7 +125,7 @@ class CorridorPanel extends JPanel {
                         inputHeader.append(System.lineSeparator());
                     } else {
                         inputData.add(Util.lineToVector(line));
-                        outputData.add(Util.lineToVector(converter.convert(line)));
+                        outputData.add(Util.lineToVector(converter.convertData(line)));
                     }
                 }
                 inputTable.setModel(new DefaultTableModel(inputData, inputColumnNames));

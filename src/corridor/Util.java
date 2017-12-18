@@ -34,6 +34,7 @@ class Util {
                 }
             }
         }
+        converterMap.put(new Pair<>("Zomf", "CMPStack"), new ZomfToCMPStackConverter());
         return converterMap;
     }
 }

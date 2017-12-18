@@ -2,11 +2,11 @@ package corridor;
 
 
 abstract class Converter {
-    abstract String convert(String line);
+    abstract String convertData(String line);
 }
 class CMPStackToZomfConverter extends Converter {
     @Override
-    String convert(String line) {
+    String convertData(String line) {
         String[] splitLine = Util.split(line);
         return new StringBuilder()
                 .append(splitLine[0]).append('\t')
@@ -21,7 +21,7 @@ class CMPStackToZomfConverter extends Converter {
 }
 class ZomfToCMPStackConverter extends Converter {
     @Override
-    String convert(String line) {
+    String convertData(String line) {
         String[] splitLine = Util.split(line);
         return new StringBuilder()
                 .append(splitLine[0]).append('\t')
@@ -34,13 +34,13 @@ class ZomfToCMPStackConverter extends Converter {
 }
 class CMPStackToCMPStackConverter extends Converter {
     @Override
-    String convert(String line) {
+    String convertData(String line) {
         return line;
     }
 }
 class ZomfToZomfConverter extends Converter {
     @Override
-    String convert(String line) {
+    String convertData(String line) {
         return line;
     }
 }

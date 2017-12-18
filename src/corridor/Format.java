@@ -2,8 +2,10 @@ package corridor;
 
 class Format {
     final int headerSize;
+    final String header;
     final String[] tableHeaders;
-    Format(int headerSize, String[] tableHeaders) {
+    Format(int headerSize, String header, String[] tableHeaders) {
+        this.header = header;
         this.headerSize = headerSize;
         this.tableHeaders = tableHeaders;
     }

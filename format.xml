@@ -2,6 +2,16 @@
 <format>
     <corridor id = "CMPStack">
         <header_size>10</header_size>
+        <header>Version 4
+            Domain CMP
+            Type NMO
+            PickingType 0
+            MaxKey 5
+            MinKey 0
+            StepKey 0.004
+
+            End_Header
+            XCoord	YCoord	Horiz	Vert</header>
         <table_header>XCoord</table_header>
         <table_header>YCoord</table_header>
         <table_header>Horiz</table_header>
@@ -10,6 +20,7 @@
     </corridor>
     <corridor id = "Zomf">
         <header_size>1</header_size>
+        <header>XCoord	YCoord	V	A	T	DeltaV	DeltaA</header>
         <table_header>XCoord</table_header>
         <table_header>YCoord</table_header>
         <table_header>V</table_header>
