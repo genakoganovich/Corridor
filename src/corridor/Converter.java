@@ -1,8 +1,11 @@
 package corridor;
 
 
+import java.util.Vector;
+
 abstract class Converter {
     abstract String convertData(String line);
+    abstract Vector<String> convertData(Vector<String> vector);
 }
 class CMPStackToZomfConverter extends Converter {
     @Override
@@ -18,6 +21,19 @@ class CMPStackToZomfConverter extends Converter {
                 .append(1.5)
                 .toString();
     }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        Vector<String> res = new Vector<>();
+        res.add(vector.get(0));
+        res.add(vector.get(1));
+        res.add(vector.get(2));
+        res.add(String.valueOf(0.0));
+        res.add(vector.get(3));
+        res.add(String.valueOf(1000));
+        res.add(String.valueOf(1.5));
+        return res;
+    }
 }
 class ZomfToCMPStackConverter extends Converter {
     @Override
@@ -31,16 +47,37 @@ class ZomfToCMPStackConverter extends Converter {
                 .append(0)
                 .toString();
     }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        Vector<String> res = new Vector<>();
+        res.add(vector.get(0));
+        res.add(vector.get(1));
+        res.add(vector.get(2));
+        res.add(vector.get(4));
+        res.add(String.valueOf(0));
+        return res;
+    }
 }
 class CMPStackToCMPStackConverter extends Converter {
     @Override
     String convertData(String line) {
         return line;
     }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return vector;
+    }
 }
 class ZomfToZomfConverter extends Converter {
     @Override
     String convertData(String line) {
         return line;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return vector;
     }
 }

@@ -22,7 +22,9 @@ class CorridorPanel extends JPanel {
     private JTable outputTable;
     private JTextField inputFile;
     private JButton browseButton;
-    private JButton testButton;
+    private JButton readButton;
+    private JButton convertButton;
+    private JButton saveButton;
     private JComboBox<String> inputFormatComboBox;
     private JComboBox<String> outputFormatComboBox;
     private Controller controller;
@@ -34,11 +36,16 @@ class CorridorPanel extends JPanel {
         controller = new Controller();
         inputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
         outputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
-        testButton = new JButton("test");
+        inputFormatComboBox.addActionListener(new InputFormatComboboxListener());
+        outputFormatComboBox.addActionListener(new OutputFormatComboboxListener());
+        readButton = new JButton("Read");
+        convertButton = new JButton("Convert");
+        saveButton = new JButton("Save");
         browseButton.addActionListener(new BrowseButtonListener());
-        testButton.addActionListener(new TestListener());
+        readButton.addActionListener(new ReadButtonListener());
+        convertButton.addActionListener(new ConvertButtonListener());
         JPanel fileNamePanel = createPanel(LayoutType.Flow, new Component[]{inputFile, browseButton,
-                inputFormatComboBox, outputFormatComboBox, testButton});
+                inputFormatComboBox, outputFormatComboBox, readButton, convertButton, saveButton});
 
         inputHeaderTextArea = createTextArea();
         outputHeaderTextArea = createTextArea();
@@ -58,6 +65,8 @@ class CorridorPanel extends JPanel {
         add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, headerSplitPane, tablePanel));
 
         synchronizeTableScrollBars();
+        controller.updateFromFormat();
+        controller.updateToFormat();
     }
 
     private JTextArea createTextArea() {
@@ -102,40 +111,55 @@ class CorridorPanel extends JPanel {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 inputFile.setText(file.getName());
-                controller.updateModel(file.getName());
-                controller.model.read();
-                controller.updateGUI();
+                controller.updateInputFileName(file.getName());
             }
         }
     }
 
-    private class TestListener implements ActionListener {
+    private class ReadButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println(new XMLParser().parse("CMPStack"));
+            controller.model.read();
+            controller.updateInputGUI();
         }
     }
+    private class ConvertButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.model.convert();
+            controller.updateOutputGUI();
+        }
+    }
+    private class InputFormatComboboxListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {controller.updateFromFormat();}
+    }
+    private class OutputFormatComboboxListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {controller.updateToFormat();}
+    }
+
+
     class Controller {
         Model model;
-        Controller() {
-            model = new Model();
-        }
+        Controller() {model = new Model();}
         void updateFromFormat() {
-            controller.model.fromFormat = (String) inputFormatComboBox.getSelectedItem();
+            model.fromFormat = (String) inputFormatComboBox.getSelectedItem();
+            model.inputFormat = model.xmlParser.parse(model.fromFormat);
         }
         void updateToFormat() {
-            controller.model.toFormat = (String) outputFormatComboBox.getSelectedItem();
+            model.toFormat = (String) outputFormatComboBox.getSelectedItem();
+            model.outputFormat = model.xmlParser.parse(model.toFormat);
         }
-        void updateModel(String filename) {
-            controller.model.inputFileName = filename;
-            updateFromFormat();
-            updateToFormat();
+        void updateInputFileName(String filename) {model.inputFileName = filename;}
+        void updateInputGUI() {
+            inputHeaderTextArea.setText(model.inputHeader);
+            inputTable.setModel(new DefaultTableModel(model.inputData, model.inputColumnNames));
         }
-        void updateGUI() {
-            inputHeaderTextArea.setText(controller.model.inputHeader);
+        void updateOutputGUI() {
             outputHeaderTextArea.setText("");
-            inputTable.setModel(new DefaultTableModel(controller.model.inputData, controller.model.inputColumnNames));
-            outputTable.setModel(new DefaultTableModel(controller.model.outputData, controller.model.outputColumnNames));
+            outputTable.setModel(new DefaultTableModel(model.outputData, model.outputColumnNames));
         }
     }
 }

@@ -11,8 +11,8 @@ import java.util.Vector;
 public class Model {
     XMLParser xmlParser;
     private HashMap<Pair<String, String>, Converter> converterMap;
-    private Format inputFormat;
-    private Format outputFormat;
+    Format inputFormat;
+    Format outputFormat;
     Vector<String> inputColumnNames;
     Vector<String> outputColumnNames;
     Vector<Vector<String>> inputData;
@@ -28,14 +28,8 @@ public class Model {
         converterMap = Util.createConverterMap(xmlParser);
     }
     void read() {
-        inputFormat = xmlParser.parse(fromFormat);
-        outputFormat = xmlParser.parse(toFormat);
-
         inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
-        outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
         inputData = new Vector<>();
-        outputData = new Vector<>();
-        converter = converterMap.get(new Pair<>(fromFormat, toFormat));
 
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(inputFileName)))) {
             StringBuilder sb = new StringBuilder();
@@ -49,7 +43,6 @@ public class Model {
                     sb.append(line);
                 } else {
                     inputData.add(Util.lineToVector(line));
-                    outputData.add(Util.lineToVector(converter.convertData(line)));
                 }
             } // while
             inputHeader = sb.toString();
@@ -57,6 +50,14 @@ public class Model {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    void convert() {
+        converter = converterMap.get(new Pair<>(fromFormat, toFormat));
+        outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
+        outputData = new Vector<>();
+        for (Vector<String> vector: inputData) {
+            outputData.add(converter.convertData(vector));
         }
     }
 }
