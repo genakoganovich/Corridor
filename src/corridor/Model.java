@@ -20,22 +20,25 @@ public class Model {
     private Converter converter;
     String inputHeader;
     String inputFileName;
+    String toFormat;
+    String fromFormat;
 
     Model() {
         xmlParser = new XMLParser();
         converterMap = Util.createConverterMap(xmlParser);
     }
-    void read(String filename, String from, String to) {
-        inputFormat = xmlParser.parse(from);
-        outputFormat = xmlParser.parse(to);
-        StringBuilder sb = new StringBuilder();
+    void read() {
+        inputFormat = xmlParser.parse(fromFormat);
+        outputFormat = xmlParser.parse(toFormat);
+
         inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
         outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
         inputData = new Vector<>();
         outputData = new Vector<>();
-        converter = converterMap.get(new Pair<>(from, to));
+        converter = converterMap.get(new Pair<>(fromFormat, toFormat));
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(filename)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(inputFileName)))) {
+            StringBuilder sb = new StringBuilder();
             String line;
             long lineNumber = 0;
             while ((line = reader.readLine()) != null) {
@@ -48,7 +51,7 @@ public class Model {
                     inputData.add(Util.lineToVector(line));
                     outputData.add(Util.lineToVector(converter.convertData(line)));
                 }
-            }
+            } // while
             inputHeader = sb.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

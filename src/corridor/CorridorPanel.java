@@ -25,14 +25,12 @@ class CorridorPanel extends JPanel {
     private JButton testButton;
     private JComboBox<String> inputFormatComboBox;
     private JComboBox<String> outputFormatComboBox;
-    //private Model model;
     private Controller controller;
 
     CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
-        //model = new Model();
         controller = new Controller();
         inputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
         outputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
@@ -104,13 +102,9 @@ class CorridorPanel extends JPanel {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 inputFile.setText(file.getName());
-                String from = (String) inputFormatComboBox.getSelectedItem();
-                String to = (String) outputFormatComboBox.getSelectedItem();
-                controller.model.read(file.getName(), from, to);
-                inputHeaderTextArea.setText(controller.model.inputHeader);
-                outputHeaderTextArea.setText("");
-                inputTable.setModel(new DefaultTableModel(controller.model.inputData, controller.model.inputColumnNames));
-                outputTable.setModel(new DefaultTableModel(controller.model.outputData, controller.model.outputColumnNames));
+                controller.updateModel(file.getName());
+                controller.model.read();
+                controller.updateGUI();
             }
         }
     }
@@ -119,6 +113,29 @@ class CorridorPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println(new XMLParser().parse("CMPStack"));
+        }
+    }
+    class Controller {
+        Model model;
+        Controller() {
+            model = new Model();
+        }
+        void updateFromFormat() {
+            controller.model.fromFormat = (String) inputFormatComboBox.getSelectedItem();
+        }
+        void updateToFormat() {
+            controller.model.toFormat = (String) outputFormatComboBox.getSelectedItem();
+        }
+        void updateModel(String filename) {
+            controller.model.inputFileName = filename;
+            updateFromFormat();
+            updateToFormat();
+        }
+        void updateGUI() {
+            inputHeaderTextArea.setText(controller.model.inputHeader);
+            outputHeaderTextArea.setText("");
+            inputTable.setModel(new DefaultTableModel(controller.model.inputData, controller.model.inputColumnNames));
+            outputTable.setModel(new DefaultTableModel(controller.model.outputData, controller.model.outputColumnNames));
         }
     }
 }
