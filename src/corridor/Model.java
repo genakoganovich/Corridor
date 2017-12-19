@@ -18,7 +18,9 @@ public class Model {
     Vector<Vector<String>> inputData;
     Vector<Vector<String>> outputData;
     private Converter converter;
-    StringBuilder sb;
+    String inputHeader;
+    String inputFileName;
+
     Model() {
         xmlParser = new XMLParser();
         converterMap = Util.createConverterMap(xmlParser);
@@ -26,7 +28,7 @@ public class Model {
     void read(String filename, String from, String to) {
         inputFormat = xmlParser.parse(from);
         outputFormat = xmlParser.parse(to);
-        sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
         outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
         inputData = new Vector<>();
@@ -47,6 +49,7 @@ public class Model {
                     outputData.add(Util.lineToVector(converter.convertData(line)));
                 }
             }
+            inputHeader = sb.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

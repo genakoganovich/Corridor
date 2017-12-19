@@ -25,15 +25,17 @@ class CorridorPanel extends JPanel {
     private JButton testButton;
     private JComboBox<String> inputFormatComboBox;
     private JComboBox<String> outputFormatComboBox;
-    private Model model;
+    //private Model model;
+    private Controller controller;
 
     CorridorPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
-        model = new Model();
-        inputFormatComboBox = new JComboBox<>(model.xmlParser.getCorridors());
-        outputFormatComboBox = new JComboBox<>(model.xmlParser.getCorridors());
+        //model = new Model();
+        controller = new Controller();
+        inputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
+        outputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
         testButton = new JButton("test");
         browseButton.addActionListener(new BrowseButtonListener());
         testButton.addActionListener(new TestListener());
@@ -104,11 +106,11 @@ class CorridorPanel extends JPanel {
                 inputFile.setText(file.getName());
                 String from = (String) inputFormatComboBox.getSelectedItem();
                 String to = (String) outputFormatComboBox.getSelectedItem();
-                model.read(file.getName(), from, to);
-                inputHeaderTextArea.setText(model.sb.toString());
+                controller.model.read(file.getName(), from, to);
+                inputHeaderTextArea.setText(controller.model.inputHeader);
                 outputHeaderTextArea.setText("");
-                inputTable.setModel(new DefaultTableModel(model.inputData, model.inputColumnNames));
-                outputTable.setModel(new DefaultTableModel(model.outputData, model.outputColumnNames));
+                inputTable.setModel(new DefaultTableModel(controller.model.inputData, controller.model.inputColumnNames));
+                outputTable.setModel(new DefaultTableModel(controller.model.outputData, controller.model.outputColumnNames));
             }
         }
     }
