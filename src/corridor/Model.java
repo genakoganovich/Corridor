@@ -19,7 +19,9 @@ public class Model {
     Vector<Vector<String>> outputData;
     private Converter converter;
     String inputHeader;
+    String outputHeader;
     String inputFileName;
+    String outputFileName;
     String toFormat;
     String fromFormat;
 
@@ -55,9 +57,29 @@ public class Model {
     void convert() {
         converter = converterMap.get(new Pair<>(fromFormat, toFormat));
         outputColumnNames = new Vector<>(Arrays.asList(outputFormat.tableHeaders));
+        if (fromFormat.equals(toFormat)) {
+            outputHeader = inputHeader;
+        } else {
+            outputHeader = outputFormat.header;
+        }
         outputData = new Vector<>();
         for (Vector<String> vector: inputData) {
             outputData.add(converter.convertData(vector));
+        }
+    }
+    void save() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outputFileName)))){
+            writer.write(outputHeader);
+            writer.newLine();
+            for (int i = 0; i < outputData.size() - 1; i++) {
+                Vector<String> vector = outputData.get(i);
+                Util.writeVector(writer, vector);
+                writer.newLine();
+            }
+            Vector<String> vector = outputData.get(outputData.size() - 1);
+            Util.writeVector(writer, vector);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

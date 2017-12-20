@@ -31,17 +31,33 @@ class XMLParser {
         Node nNode = findNodeByID(corridorID);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
-            headerSize = Integer.parseInt(
-                    eElement.getElementsByTagName("header_size").item(0).getTextContent());
-            header = eElement.getElementsByTagName("header").item(0).getTextContent();
-
-            NodeList childrenList = eElement.getElementsByTagName("table_header");
-            tableHeaders = new String[childrenList.getLength()];
-            for (int i = 0; i < childrenList.getLength(); i++) {
-                tableHeaders[i] = childrenList.item(i).getTextContent();
-            }
+            headerSize = Integer.parseInt(getTextContentByTagName(eElement, "header_size"));
+            header = getHeader(getAllTextContentByTagName(eElement, "header"));
+            tableHeaders = getAllTextContentByTagName(eElement, "table_header");
         }
         return new Format(headerSize, header, tableHeaders);
+    }
+    private String getHeader(String[] allTextContent) {
+        StringBuilder sb = new StringBuilder();
+        for (int i  = 0; i < allTextContent.length - 1; i++) {
+            sb.append(allTextContent[i]).append(System.lineSeparator());
+        }
+        sb.append(allTextContent[allTextContent.length - 1]);
+        return sb.toString();
+    }
+    private String getTextContentByTagName(Element eElement, String tagName) {
+        return eElement.getElementsByTagName(tagName).item(0).getTextContent();
+    }
+    private String[] getAllTextContentByTagName(Element eElement, String tagName) {
+        NodeList nodeList = getNodeListByTagName(eElement, tagName);
+        String[] res = new String[nodeList.getLength()];
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            res[i] = nodeList.item(i).getTextContent();
+        }
+        return res;
+    }
+    private NodeList getNodeListByTagName(Element eElement, String tagName) {
+        return eElement.getElementsByTagName(tagName);
     }
     private Node findNodeByID(String corridorID) {
         NodeList nList = doc.getElementsByTagName("corridor");

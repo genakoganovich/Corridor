@@ -44,6 +44,7 @@ class CorridorPanel extends JPanel {
         browseButton.addActionListener(new BrowseButtonListener());
         readButton.addActionListener(new ReadButtonListener());
         convertButton.addActionListener(new ConvertButtonListener());
+        saveButton.addActionListener(new SaveButtonListener());
         JPanel fileNamePanel = createPanel(LayoutType.Flow, new Component[]{inputFile, browseButton,
                 inputFormatComboBox, outputFormatComboBox, readButton, convertButton, saveButton});
 
@@ -140,17 +141,29 @@ class CorridorPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {controller.updateToFormat();}
     }
 
-
+    private class SaveButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.generateOutputFileName();
+            controller.model.save();
+        }
+    }
     class Controller {
         Model model;
         Controller() {model = new Model();}
         void updateFromFormat() {
             model.fromFormat = (String) inputFormatComboBox.getSelectedItem();
             model.inputFormat = model.xmlParser.parse(model.fromFormat);
+            model.inputHeader = model.inputFormat.header;
         }
         void updateToFormat() {
             model.toFormat = (String) outputFormatComboBox.getSelectedItem();
             model.outputFormat = model.xmlParser.parse(model.toFormat);
+            if (model.fromFormat.equals(model.toFormat)) {
+                model.outputHeader = model.inputHeader;
+            } else {
+                model.outputHeader = model.outputFormat.header;
+            }
         }
         void updateInputFileName(String filename) {model.inputFileName = filename;}
         void updateInputGUI() {
@@ -158,8 +171,11 @@ class CorridorPanel extends JPanel {
             inputTable.setModel(new DefaultTableModel(model.inputData, model.inputColumnNames));
         }
         void updateOutputGUI() {
-            outputHeaderTextArea.setText("");
+            outputHeaderTextArea.setText(model.outputHeader);
             outputTable.setModel(new DefaultTableModel(model.outputData, model.outputColumnNames));
+        }
+        void generateOutputFileName() {
+            model.outputFileName = Util.addStringToFilename(model.inputFileName, "_converted");
         }
     }
 }

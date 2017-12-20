@@ -4,6 +4,8 @@ import javafx.util.Pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
@@ -36,5 +38,28 @@ class Util {
         }
         converterMap.put(new Pair<>("Zomf", "CMPStack"), new ZomfToCMPStackConverter());
         return converterMap;
+    }
+    static String addStringToFilename(String filename, String addedString) {
+        int pos = filename.lastIndexOf('.');
+        return new StringBuilder(new String(filename.substring(0, pos)))
+                .append(addedString)
+                .append(new String(filename.substring(pos)))
+                .toString();
+    }
+    static String vectorToLine(Vector<String> vector) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < vector.size() - 1; i++) {
+            sb.append(vector.get(i)).append('\t');
+        }
+        sb.append(vector.get(vector.size() - 1));
+        return sb.toString();
+    }
+    static void writeVector(BufferedWriter writer, Vector<String> vector) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < vector.size() - 1; i++) {
+            sb.append(vector.get(i)).append('\t');
+        }
+        sb.append(vector.get(vector.size() - 1));
+        writer.write(Util.vectorToLine(vector));
     }
 }

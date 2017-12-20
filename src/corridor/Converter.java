@@ -1,6 +1,5 @@
 package corridor;
 
-
 import java.util.Vector;
 
 abstract class Converter {
