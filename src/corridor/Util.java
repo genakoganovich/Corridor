@@ -62,4 +62,10 @@ class Util {
         sb.append(vector.get(vector.size() - 1));
         writer.write(Util.vectorToLine(vector));
     }
+    static double get(Vector<String> vector, int index) {
+        return Double.parseDouble(vector.get(index));
+    }
+    static void set(Vector<String> vector, int index, double value) {
+        vector.set(index, String.valueOf(value));
+    }
 }
