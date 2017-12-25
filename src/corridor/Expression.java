@@ -1,5 +1,7 @@
 package corridor;
 
+import java.util.Vector;
+
 public abstract class Expression {
     abstract double evaluate();
 }
@@ -9,6 +11,9 @@ class Number extends Expression {
     final double value;
     Number(double value) {
         this.value = value;
+    }
+    Number(Vector<String> vector, int index) {
+        value = Util.get(vector, index);
     }
     @Override
     double evaluate() {
