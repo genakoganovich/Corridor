@@ -108,8 +108,7 @@ class CorridorPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
-            int returnValue = chooser.showOpenDialog(CorridorPanel.this);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (chooser.showOpenDialog(CorridorPanel.this) == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 inputFile.setText(file.getName());
                 controller.updateInputFileName(file.getName());
