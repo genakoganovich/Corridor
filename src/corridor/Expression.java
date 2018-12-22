@@ -3,8 +3,6 @@ package corridor;
 public abstract class Expression {
     abstract double evaluate();
 }
-
-
 class Number extends Expression {
     final double value;
     Number(double value) {
@@ -15,7 +13,6 @@ class Number extends Expression {
         return value;
     }
 }
-
 abstract class BinaryOperation extends Expression {
     Expression op1;
     Expression op2;
@@ -59,5 +56,10 @@ class Quotient extends BinaryOperation {
     @Override
     double evaluate() {
         return op1.evaluate() / op2.evaluate();
+    }
+}
+class ExpressionFactory {
+    static Expression createExrepression() {
+        return null;
     }
 }
