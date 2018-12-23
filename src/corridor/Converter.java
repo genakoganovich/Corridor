@@ -27,6 +27,7 @@ class CMPStackToZomfConverter extends Converter {
         res.add(vector.get(0));
         res.add(vector.get(1));
         res.add(vector.get(2));
+        double velocity = Double.valueOf(vector.get(2));
         res.add(String.valueOf(0.0));
         res.add(vector.get(3));
         res.add(String.valueOf(1000));
