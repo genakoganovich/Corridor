@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <format>
     <corridor id = "CMPStack">
-        <header_size>10</header_size>
+        <header_size>13</header_size>
         <header>Version 4</header>
         <header>Domain CMP</header>
         <header>Type NMO</header>
@@ -9,6 +9,9 @@
         <header>MaxKey 5</header>
         <header>MinKey 0</header>
         <header>StepKey 0.004</header>
+        <header>Elevation UNKNOWN</header>
+        <header>V0 nan</header>
+        <header>Datum nan</header>
         <header>          </header>
         <header>End_Header</header>
         <header>XCoord	YCoord	Horiz	Vert</header>

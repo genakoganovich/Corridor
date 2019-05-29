@@ -7,6 +7,10 @@ abstract class Converter {
     abstract Vector<String> convertData(Vector<String> vector);
 }
 class CMPStackToZomfConverter extends Converter {
+
+    public static final int INITIAL_CORRIDOR_WIDTH = 1000;
+    public static final int MINIMAL_VELOCITY = 1500;
+
     @Override
     String convertData(String line) {
         String[] splitLine = Util.split(line);
@@ -30,7 +34,7 @@ class CMPStackToZomfConverter extends Converter {
         double velocity = Double.valueOf(vector.get(2));
         res.add(String.valueOf(0.0));
         res.add(vector.get(3));
-        res.add(String.valueOf(1000));
+        res.add(String.valueOf(INITIAL_CORRIDOR_WIDTH));
         res.add(String.valueOf(1.5));
         return res;
     }
