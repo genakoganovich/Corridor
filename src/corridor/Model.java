@@ -67,11 +67,6 @@ public class Model {
             outputData.add(converter.convertData(vector));
         }
     }
-    void set(int index, Expression expression) {
-        for (Vector<String> vector: outputData) {
-            Util.set(vector, index, expression.evaluate());
-        }
-    }
     void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outputFileName)))){
             writer.write(outputHeader);

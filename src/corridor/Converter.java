@@ -85,3 +85,25 @@ class ZomfToZomfConverter extends Converter {
         return vector;
     }
 }
+class ObsOldToObsNewConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsNewToObsOldConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}

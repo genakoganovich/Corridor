@@ -32,4 +32,30 @@
         <table_header>DeltaV</table_header>
         <table_header>DeltaA</table_header>
     </corridor>
+    <corridor id = "ObsOld">
+        <header_size>1</header_size>
+        <header>FFIDnew	FFID	VP/SP No	First	Last	First2	Last2	D_traces</header>
+        <table_header>FFIDnew</table_header>
+        <table_header>FFID</table_header>
+        <table_header>VP/SP No</table_header>
+        <table_header>First</table_header>
+        <table_header>Last</table_header>
+        <table_header>First2</table_header>
+        <table_header>Last2</table_header>
+        <table_header>D_traces</table_header>
+    </corridor>
+    <corridor id = "ObsNew">
+        <header_size>1</header_size>
+        <header>FFIDnew	SP	RP1	RP2	RP3	RP4	Wei	Depth	Uph	Dead</header>
+        <table_header>FFIDnew</table_header>
+        <table_header>SP</table_header>
+        <table_header>RP1</table_header>
+        <table_header>RP2</table_header>
+        <table_header>RP3</table_header>
+        <table_header>RP4</table_header>
+        <table_header>Wei</table_header>
+        <table_header>Depth</table_header>
+        <table_header>Uph</table_header>
+        <table_header>Dead</table_header>
+    </corridor>
 </format>
