@@ -8,8 +8,8 @@ abstract class Converter {
 }
 class CMPStackToZomfConverter extends Converter {
 
-    public static final int CORRIDOR_WIDTH = 1000;
-    public static final int MINIMUM_VELOCITY = 1500;
+    public static final int INITIAL_CORRIDOR_WIDTH = 1000;
+    public static final int MINIMAL_VELOCITY = 1500;
 
     @Override
     String convertData(String line) {
@@ -27,20 +27,14 @@ class CMPStackToZomfConverter extends Converter {
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
-        int currentCorridorWidth = CORRIDOR_WIDTH;
         Vector<String> res = new Vector<>();
         res.add(vector.get(0));
         res.add(vector.get(1));
-        double velocity = Double.valueOf(vector.get(2));
-        if (velocity - CORRIDOR_WIDTH < MINIMUM_VELOCITY) {
-            velocity = (MINIMUM_VELOCITY + velocity + CORRIDOR_WIDTH) / 2;
-            vector.set(2, String.valueOf(velocity));
-            currentCorridorWidth = (int) (velocity - MINIMUM_VELOCITY);
-        }
         res.add(vector.get(2));
+        double velocity = Double.valueOf(vector.get(2));
         res.add(String.valueOf(0.0));
         res.add(vector.get(3));
-        res.add(String.valueOf(currentCorridorWidth));
+        res.add(String.valueOf(INITIAL_CORRIDOR_WIDTH));
         res.add(String.valueOf(1.5));
         return res;
     }
