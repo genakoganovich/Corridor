@@ -69,10 +69,10 @@ class XMLParser {
         }
         return null;
     }
-    String[] getCorridors() {
+    String[] getFormats(String format) {
         String[] res = null;
         try {
-            NodeList nList = doc.getElementsByTagName("corridor");
+            NodeList nList = doc.getElementsByTagName(format);
             res = new String[nList.getLength()];
             for (int index = 0; index < nList.getLength(); index++) {
                 res[index] = nList.item(index).getAttributes().item(0).getTextContent();

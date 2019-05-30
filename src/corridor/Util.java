@@ -19,13 +19,13 @@ class Util {
     static String[] split(String line) {
         return line.split("\\s+");
     }
-    static HashMap<Pair<String, String>, Converter> createConverterMap(XMLParser xmlParser) {
+    static HashMap<Pair<String, String>, Converter> createConverterMap(XMLParser xmlParser, String format) {
         HashMap<Pair<String, String>, Converter> converterMap = new HashMap<>();
-        for (String from: xmlParser.getCorridors()) {
-            for (String to: xmlParser.getCorridors()) {
+        for (String from: xmlParser.getFormats(format)) {
+            for (String to: xmlParser.getFormats(format)) {
                 try {
                     Class<? extends Converter> aClass =
-                            (Class<? extends Converter>) Class.forName("corridor." + from + "To" + to + "Converter");
+                            (Class<? extends Converter>) Class.forName(format + "." + from + "To" + to + "Converter");
                     converterMap.put(new Pair<>(from, to), aClass.newInstance());
                 } catch (InstantiationException e) {
                     e.printStackTrace();

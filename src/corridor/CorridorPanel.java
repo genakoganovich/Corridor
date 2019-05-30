@@ -34,8 +34,8 @@ class CorridorPanel extends JPanel {
         inputFile = new JTextField(COLUMNS);
         browseButton = new JButton("...");
         controller = new Controller();
-        inputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
-        outputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getCorridors());
+        inputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getFormats("corridor"));
+        outputFormatComboBox = new JComboBox<>(controller.model.xmlParser.getFormats("corridor"));
         inputFormatComboBox.addActionListener(new InputFormatComboboxListener());
         outputFormatComboBox.addActionListener(new OutputFormatComboboxListener());
         readButton = new JButton("Read");
