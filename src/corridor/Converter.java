@@ -7,10 +7,8 @@ abstract class Converter {
     abstract Vector<String> convertData(Vector<String> vector);
 }
 class CMPStackToZomfConverter extends Converter {
-
     public static final int INITIAL_CORRIDOR_WIDTH = 1000;
     public static final int MINIMAL_VELOCITY = 1500;
-
     @Override
     String convertData(String line) {
         String[] splitLine = Util.split(line);
@@ -24,7 +22,6 @@ class CMPStackToZomfConverter extends Converter {
                 .append(1.5)
                 .toString();
     }
-
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
@@ -51,7 +48,6 @@ class ZomfToCMPStackConverter extends Converter {
                 .append(0)
                 .toString();
     }
-
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
@@ -61,6 +57,25 @@ class ZomfToCMPStackConverter extends Converter {
         res.add(vector.get(4));
         res.add(String.valueOf(0));
         return res;
+    }
+}
+class ObsOldSergeyToObsNewConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        String[] splitLine = Util.split(line);
+        return new StringBuilder()
+                .append(splitLine[0]).append('\t')
+                .append(splitLine[1]).append('\t')
+                .append(splitLine[2]).append('\t')
+                .append(0.0).append('\t')
+                .append(splitLine[3]).append('\t')
+                .append(1000).append('\t')
+                .append(1.5)
+                .toString();
+    }
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
     }
 }
 class CMPStackToCMPStackConverter extends Converter {
@@ -85,7 +100,7 @@ class ZomfToZomfConverter extends Converter {
         return vector;
     }
 }
-class ObsOldToObsNewConverter extends Converter {
+class ObsNewToObsOldConverter extends Converter {
     @Override
     String convertData(String line) {
         return null;
@@ -96,7 +111,107 @@ class ObsOldToObsNewConverter extends Converter {
         return null;
     }
 }
-class ObsNewToObsOldConverter extends Converter {
+class ZomfToObsOldConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+
+class CMPStackToObsOldConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class CMPStackToObsNewConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ZomfToObsNewConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsOldSergeyToCMPStackConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsOldSergeyToZomfConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsNewToCMPStackConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsNewToZomfConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsOldSergeyToObsOldSergeyConverter extends Converter {
+    @Override
+    String convertData(String line) {
+        return null;
+    }
+
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        return null;
+    }
+}
+class ObsNewToObsNewConverter extends Converter {
     @Override
     String convertData(String line) {
         return null;

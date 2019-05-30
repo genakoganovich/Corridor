@@ -32,7 +32,7 @@
         <table_header>DeltaV</table_header>
         <table_header>DeltaA</table_header>
     </corridor>
-    <obs id = "ObsOld">
+    <corridor id = "ObsOldSergey">
         <header_size>1</header_size>
         <header>FFIDnew	FFID	VP/SP No	First	Last	First2	Last2	D_traces</header>
         <table_header>FFIDnew</table_header>
@@ -43,8 +43,21 @@
         <table_header>First2</table_header>
         <table_header>Last2</table_header>
         <table_header>D_traces</table_header>
-    </obs>
-    <obs id = "ObsNew">
+    </corridor>
+    <corridor id = "ObsOldJason">
+        <header_size>1</header_size>
+        <header>FFID,SP,1st rcvr,1st rcvr before gap,1st rcvr after gap,last rcvr,Dead Traces,F1new,L1new</header>
+        <table_header>FFID</table_header>
+        <table_header>SP</table_header>
+        <table_header>1st rcvr</table_header>
+        <table_header>1st rcvr before gap</table_header>
+        <table_header>1st rcvr after gap</table_header>
+        <table_header>last rcvr</table_header>
+        <table_header>Dead Traces</table_header>
+        <table_header>F1new</table_header>
+        <table_header>L1new</table_header>
+    </corridor>
+    <corridor id = "ObsNew">
         <header_size>1</header_size>
         <header>FFIDnew	SP	RP1	RP2	RP3	RP4	Wei	Depth	Uph	Dead</header>
         <table_header>FFIDnew</table_header>
@@ -57,5 +70,5 @@
         <table_header>Depth</table_header>
         <table_header>Uph</table_header>
         <table_header>Dead</table_header>
-    </obs>
+    </corridor>
 </format>
