@@ -3,11 +3,11 @@ package corridor;
 import java.util.Vector;
 
 abstract class Converter {
+    public static final int NOT_FOR_USE = -999;
+    public static final int INITIAL_CORRIDOR_WIDTH = 1000;
     abstract Vector<String> convertData(Vector<String> vector);
 }
 class CMPStackToZomfConverter extends Converter {
-    public static final int INITIAL_CORRIDOR_WIDTH = 1000;
-
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
@@ -34,7 +34,6 @@ class ZomfToCMPStackConverter extends Converter {
     }
 }
 class ObsOldSergeyToObsNewConverter extends Converter {
-    public static final int NOT_FOR_USE = -999;
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
@@ -42,7 +41,11 @@ class ObsOldSergeyToObsNewConverter extends Converter {
         res.add(vector.get(2));
         res.add(vector.get(3));
         res.add(vector.get(4));
-        res.add(String.valueOf(NOT_FOR_USE));
+        if(vector.get(5) != null) {
+            res.add(vector.get(5));
+        } else {
+            res.add(String.valueOf(NOT_FOR_USE));
+        }
         res.add(String.valueOf(NOT_FOR_USE));
         res.add(String.valueOf(NOT_FOR_USE));
         res.add(String.valueOf(NOT_FOR_USE));
@@ -52,6 +55,23 @@ class ObsOldSergeyToObsNewConverter extends Converter {
         } else {
             res.add("");
         }
+        return res;
+    }
+}
+class ObsOldJasonToObsNewConverter extends Converter {
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        Vector<String> res = new Vector<>();
+        res.add(vector.get(0));
+        res.add(vector.get(1));
+        res.add(vector.get(7));
+        res.add(vector.get(8));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add("");
         return res;
     }
 }

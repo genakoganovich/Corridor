@@ -17,7 +17,7 @@ class Util {
     }
     @NotNull
     static String[] split(String line) {
-        return line.split("\\s");
+        return line.split("[\\s ,]");
     }
     static HashMap<Pair<String, String>, Converter> createConverterMap(XMLParser xmlParser, String format) {
         HashMap<Pair<String, String>, Converter> converterMap = new HashMap<>();
