@@ -3,32 +3,17 @@ package corridor;
 import java.util.Vector;
 
 abstract class Converter {
-    abstract String convertData(String line);
     abstract Vector<String> convertData(Vector<String> vector);
 }
 class CMPStackToZomfConverter extends Converter {
     public static final int INITIAL_CORRIDOR_WIDTH = 1000;
-    public static final int MINIMAL_VELOCITY = 1500;
-    @Override
-    String convertData(String line) {
-        String[] splitLine = Util.split(line);
-        return new StringBuilder()
-                .append(splitLine[0]).append('\t')
-                .append(splitLine[1]).append('\t')
-                .append(splitLine[2]).append('\t')
-                .append(0.0).append('\t')
-                .append(splitLine[3]).append('\t')
-                .append(1000).append('\t')
-                .append(1.5)
-                .toString();
-    }
+
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
         res.add(vector.get(0));
         res.add(vector.get(1));
         res.add(vector.get(2));
-        double velocity = Double.valueOf(vector.get(2));
         res.add(String.valueOf(0.0));
         res.add(vector.get(3));
         res.add(String.valueOf(INITIAL_CORRIDOR_WIDTH));
@@ -37,17 +22,6 @@ class CMPStackToZomfConverter extends Converter {
     }
 }
 class ZomfToCMPStackConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        String[] splitLine = Util.split(line);
-        return new StringBuilder()
-                .append(splitLine[0]).append('\t')
-                .append(splitLine[1]).append('\t')
-                .append(splitLine[2]).append('\t')
-                .append(splitLine[4]).append('\t')
-                .append(0)
-                .toString();
-    }
     @Override
     Vector<String> convertData(Vector<String> vector) {
         Vector<String> res = new Vector<>();
@@ -60,29 +34,28 @@ class ZomfToCMPStackConverter extends Converter {
     }
 }
 class ObsOldSergeyToObsNewConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        String[] splitLine = Util.split(line);
-        return new StringBuilder()
-                .append(splitLine[0]).append('\t')
-                .append(splitLine[1]).append('\t')
-                .append(splitLine[2]).append('\t')
-                .append(0.0).append('\t')
-                .append(splitLine[3]).append('\t')
-                .append(1000).append('\t')
-                .append(1.5)
-                .toString();
-    }
+    public static final int NOT_FOR_USE = -999;
     @Override
     Vector<String> convertData(Vector<String> vector) {
-        return null;
+        Vector<String> res = new Vector<>();
+        res.add(vector.get(0));
+        res.add(vector.get(2));
+        res.add(vector.get(3));
+        res.add(vector.get(4));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        res.add(String.valueOf(NOT_FOR_USE));
+        if (vector.get(7) != null) {
+            res.add(vector.get(7));
+        } else {
+            res.add("");
+        }
+        return res;
     }
 }
 class CMPStackToCMPStackConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return line;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -90,10 +63,6 @@ class CMPStackToCMPStackConverter extends Converter {
     }
 }
 class ZomfToZomfConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return line;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -101,10 +70,6 @@ class ZomfToZomfConverter extends Converter {
     }
 }
 class ObsNewToObsOldConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -112,10 +77,6 @@ class ObsNewToObsOldConverter extends Converter {
     }
 }
 class ZomfToObsOldConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -124,10 +85,6 @@ class ZomfToObsOldConverter extends Converter {
 }
 
 class CMPStackToObsOldConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -135,10 +92,6 @@ class CMPStackToObsOldConverter extends Converter {
     }
 }
 class CMPStackToObsNewConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -146,10 +99,6 @@ class CMPStackToObsNewConverter extends Converter {
     }
 }
 class ZomfToObsNewConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -157,10 +106,6 @@ class ZomfToObsNewConverter extends Converter {
     }
 }
 class ObsOldSergeyToCMPStackConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -168,10 +113,6 @@ class ObsOldSergeyToCMPStackConverter extends Converter {
     }
 }
 class ObsOldSergeyToZomfConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -179,10 +120,6 @@ class ObsOldSergeyToZomfConverter extends Converter {
     }
 }
 class ObsNewToCMPStackConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -190,10 +127,6 @@ class ObsNewToCMPStackConverter extends Converter {
     }
 }
 class ObsNewToZomfConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -201,10 +134,6 @@ class ObsNewToZomfConverter extends Converter {
     }
 }
 class ObsOldSergeyToObsOldSergeyConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
@@ -212,10 +141,6 @@ class ObsOldSergeyToObsOldSergeyConverter extends Converter {
     }
 }
 class ObsNewToObsNewConverter extends Converter {
-    @Override
-    String convertData(String line) {
-        return null;
-    }
 
     @Override
     Vector<String> convertData(Vector<String> vector) {
