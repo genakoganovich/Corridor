@@ -36,7 +36,6 @@ class Util {
                 }
             }
         }
-        converterMap.put(new Pair<>("Zomf", "CMPStack"), new ZomfToCMPStackConverter());
         return converterMap;
     }
     static String addStringToFilename(String filename, String addedString) {

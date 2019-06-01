@@ -10,6 +10,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 class XMLParser {
+    public static final String HEADER_TAG = "header";
+    public static final String HEADER_SIZE_TAG = "header_size";
+    public static final String CORRIDOR_TAG = "corridor";
+    public static final String TABLE_HEADER_TAG = "table_header";
     private Document doc;
     XMLParser() {
         try {
@@ -28,12 +32,12 @@ class XMLParser {
         int headerSize = 0;
         String header = null;
         String[] tableHeaders = null;
-        Node nNode = findNodeByID(corridorID);
+        Node nNode = findNodeByID(corridorID, XMLParser.CORRIDOR_TAG);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
-            headerSize = Integer.parseInt(getTextContentByTagName(eElement, "header_size"));
-            header = getHeader(getAllTextContentByTagName(eElement, "header"));
-            tableHeaders = getAllTextContentByTagName(eElement, "table_header");
+            headerSize = Integer.parseInt(getTextContentByTagName(eElement, XMLParser.HEADER_SIZE_TAG));
+            header = getHeader(getAllTextContentByTagName(eElement, XMLParser.HEADER_TAG));
+            tableHeaders = getAllTextContentByTagName(eElement, XMLParser.TABLE_HEADER_TAG);
         }
         return new Format(headerSize, header, tableHeaders);
     }
@@ -59,8 +63,8 @@ class XMLParser {
     private NodeList getNodeListByTagName(Element eElement, String tagName) {
         return eElement.getElementsByTagName(tagName);
     }
-    private Node findNodeByID(String corridorID) {
-        NodeList nList = doc.getElementsByTagName("corridor");
+    private Node findNodeByID(String corridorID, String tagName) {
+        NodeList nList = doc.getElementsByTagName(tagName);
         for (int index = 0; index < nList.getLength(); index++) {
             Node nNode = nList.item(index);
             if (nNode.getAttributes().item(0).getTextContent().equals(corridorID)) {

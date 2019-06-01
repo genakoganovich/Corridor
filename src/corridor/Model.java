@@ -27,7 +27,7 @@ public class Model {
 
     Model() {
         xmlParser = new XMLParser();
-        converterMap = Util.createConverterMap(xmlParser, "corridor");
+        converterMap = Util.createConverterMap(xmlParser, XMLParser.CORRIDOR_TAG);
     }
     void read() {
         inputColumnNames = new Vector<>(Arrays.asList(inputFormat.tableHeaders));
