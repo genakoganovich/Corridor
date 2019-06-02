@@ -41,10 +41,12 @@ class ObsOldSergeyToObsNewConverter extends Converter {
         res.add(vector.get(2));
         res.add(vector.get(3));
         res.add(vector.get(4));
-        if(vector.get(5) != null) {
-            res.add(vector.get(5));
-        } else {
+        if(vector.get(5) == null) {
             res.add(String.valueOf(NOT_FOR_USE));
+        } else if (vector.get(5).equals("")){
+            res.add(String.valueOf(NOT_FOR_USE));
+        } else {
+            res.add(vector.get(5));
         }
         res.add(String.valueOf(NOT_FOR_USE));
         res.add(String.valueOf(NOT_FOR_USE));
