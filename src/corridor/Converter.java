@@ -48,7 +48,13 @@ class ObsOldSergeyToObsNewConverter extends Converter {
         } else {
             res.add(vector.get(5));
         }
-        res.add(String.valueOf(NOT_FOR_USE));
+        if(vector.get(6) == null) {
+            res.add(String.valueOf(NOT_FOR_USE));
+        } else if (vector.get(6).equals("")){
+            res.add(String.valueOf(NOT_FOR_USE));
+        } else {
+            res.add(vector.get(6));
+        }
         res.add(String.valueOf(NOT_FOR_USE));
         res.add(String.valueOf(NOT_FOR_USE));
         res.add(String.valueOf(NOT_FOR_USE));
