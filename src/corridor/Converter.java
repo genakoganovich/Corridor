@@ -92,3 +92,26 @@ class ObsOldJasonToObsNewConverter extends Converter {
         return res;
     }
 }
+class ObsNewToObsNewConverter extends Converter {
+    @Override
+    Vector<String> convertData(Vector<String> vector) {
+        Vector<String> res = new Vector<>();
+        int ffid = Integer.parseInt(vector.get(0));
+        int ffidNew = ffid - 1000;
+        res.add(String.valueOf(ffidNew));
+        res.add(vector.get(1));
+        res.add(vector.get(2));
+        res.add(vector.get(3));
+        res.add(vector.get(4));
+        res.add(vector.get(5));
+        res.add(vector.get(6));
+        res.add(vector.get(7));
+        res.add(vector.get(8));
+        if (vector.get(9) != null) {
+            res.add(vector.get(9));
+        } else {
+            res.add("");
+        }
+        return res;
+    }
+}
